@@ -1,5 +1,5 @@
 package main
 
-func foo() (string) {
+func foo() string {
 	return "bar\n"
 }
