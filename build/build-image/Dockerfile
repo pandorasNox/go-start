@@ -51,7 +51,7 @@ ENTRYPOINT /${CMD_NAME}
 
 
 # FROM compile AS dev
-FROM golang:1.13.5
+FROM golang:1.13.5 as dev
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -62,7 +62,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 # See https://aka.ms/vscode-remote/containers/non-root-user for details.
 ARG USERNAME=vscode
 ARG USER_UID=1000
-ARG USER_GID=$USER_UID
+ARG USER_GID=${USER_UID}
+
+# add new group `golang`, add root
+# permit golang group for /go dirctory
+RUN groupadd --gid 3333 golang
+RUN usermod -a -G golang root
 
 # Configure apt, install packages and tools
 RUN apt-get update \
@@ -105,7 +110,7 @@ RUN apt-get update \
         github.com/derekparker/delve/cmd/dlv 2>&1
 
 ENV GO111MODULE on
-RUN go get golang.org/x/tools/gopls@latest
+RUN go get golang.org/x/tools/gopls@v0.2.2
 
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
 RUN groupadd --gid $USER_GID $USERNAME \
@@ -115,6 +120,14 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
+#  add vcode user to group `golang`
+RUN usermod -a -G golang ${USERNAME}
+RUN chown -R :golang /go
+RUN chmod -R g+rwx /go
+
 RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* /go/src
+
+# Switch back to dialog for any ad-hoc use of apt-get
+ENV DEBIAN_FRONTEND=dialog
