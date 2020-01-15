@@ -1,0 +1,34 @@
+version: "3.7"
+
+
+networks:
+  # backend:
+  somenetwork:
+
+
+services:
+  goenv:
+    build:
+      context: "."
+      dockerfile: ./build/build-image/Dockerfile
+      target: dev
+    cap_add:
+      # - ALL
+      - SYS_PTRACE
+    # cap_drop:
+    #   - NET_ADMIN
+    #   - SYS_ADMIN
+    security_opt:
+      - seccomp:unconfined
+    #   - label:user:USER
+    #   - label:role:ROLE
+    networks:
+      - somenetwork
+    ports:
+      - "27080:27080"
+      - "27443:27443"
+    entrypoint:
+      - sleep
+      - infinity
+      # - while :; do sleep 2073600; done
+
