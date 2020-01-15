@@ -51,7 +51,7 @@ ENTRYPOINT /${CMD_NAME}
 
 
 # FROM compile AS dev
-FROM golang:1.13.5 as dev
+FROM golang:1.13.5 AS dev
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
