@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func init() {
@@ -37,4 +38,5 @@ func main() {
 		"omg":    true,
 		"number": 100,
 	}).Fatal("The ice breaks!")
+
 }
