@@ -131,3 +131,9 @@ RUN apt-get autoremove -y \
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
+
+USER vscode
+RUN mkdir -p /home/vscode/.vscode-server/extensions
+USER root
+
+COPY build/build-image/rootfs /

@@ -6,6 +6,10 @@ networks:
   somenetwork:
 
 
+volumes:
+  volume_vscode-extensions:
+
+
 services:
   goenv:
     build:
@@ -23,12 +27,21 @@ services:
     #   - label:user:USER
     #   - label:role:ROLE
     networks:
-      - somenetwork
+      somenetwork:
+        aliases:
+          - alias1${FOO}
+          - alias3
     ports:
       - "27080:27080"
       - "27443:27443"
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      # - ./.vscode/extensions:/home/vscode/.vscode-server/extensions
+      - volume_vscode-extensions:/home/vscode/.vscode-server/extensions
     entrypoint:
-      - sleep
-      - infinity
+      - /bin/entrypoint.dev.sh
+      # - sleep
+      # - infinity
       # - while :; do sleep 2073600; done
 
