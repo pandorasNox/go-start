@@ -124,6 +124,8 @@ RUN groupadd --gid $USER_GID $USERNAME \
 RUN usermod -a -G golang ${USERNAME}
 RUN chown -R :golang /go
 RUN chmod -R g+rwx /go
+RUN chown -R :golang /etc/ssh
+RUN chmod -R g+rwx /etc/ssh
 
 RUN apt-get autoremove -y \
     && apt-get clean -y \
@@ -137,3 +139,5 @@ RUN mkdir -p /home/vscode/.vscode-server/extensions
 USER root
 
 COPY build/build-image/rootfs /
+
+# USER vscode

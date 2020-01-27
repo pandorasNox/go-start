@@ -1,4 +1,5 @@
 
+
 include ./hack/help.mk
 
 
@@ -9,19 +10,35 @@ PWD:=$(shell pwd)
 
 .PHONY: setup
 setup: ##@setup builds the container image(s) and starts the setup
-	docker-compose build
-	docker-compose up -d
+	docker-compose --compatibility build
+	docker-compose --compatibility up -d
+
+
+.PHONY: stop
+stop: ##setup stops the setup (e.g. running containers)
+	docker-compose --compatibility stop -t 2
 
 
 .PHONY: clean
 clean: ##@setup clean setup
-	docker-compose down -t 2
+	docker-compose --compatibility down -t 2
+
+
+.PHONY: status
+status: ##@telemetry shows the state of the running setup
+	docker-compose --compatibility ps
+
+
+.PHONY: logs
+logs: ##@telemetry shows logs
+	docker-compose --compatibility logs
 
 
 .PHONY: cli
-cli: ##@setup set up a docker container with mounted source where you can execute all go commands
+cli: ##@dev exec's into container with all the dev tools
 	# docker run -it --rm -u $(UID):$(GID) -v $(PWD):/source -w /source golang:1.10.3 bash
-	docker run -it --rm -v $(PWD):/go/src/go-start -w /go/src/go-start -v $(PWD)/certs:/certs -p 8083:8083 golang:1.13.5 bash
+	# docker run -it --rm -v $(PWD):/go/src/go-start -w /go/src/go-start -v $(PWD)/certs:/certs -p 8083:8083 golang:1.13.5 bash
+	docker-compose --compatibility exec goenv bash
 
 
 .PHONY: mkdocker
