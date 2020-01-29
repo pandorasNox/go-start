@@ -43,10 +43,10 @@ services:
       resources:
         limits:
           # cpus: '0.2'
-          cpus: '1.0'
+          cpus: '2.0'
           # memory: 50M
           # amount "100M" is at least needed for e.g. `apt-get install htop`
-          memory: 1000M
+          memory: 1024M
         # reservations:
         #   cpus: '0.1'
         #   memory: 20M
